@@ -9,8 +9,8 @@ from tkFileDialog import *
 from Attribute import Attribute
 from SearchPacket import SearchPacket
 from GuiThread import GuiThread
-from GUIAttributeWindow import AttributeWindow
-from GUIResultsWindow import ResultsWindow
+from GuiAttributeWindow import AttributeWindow
+from GuiResultsWindow import ResultsWindow
 from EnronSearch.EnronInterface import EnronInterface
 
 class App:
