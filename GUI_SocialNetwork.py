@@ -11,8 +11,8 @@ from SocialNetworkSearch.Interface import Interface
 from Attribute import Attribute
 from SearchPacket import SearchPacket
 from GuiThread import GuiThread
-from AttributeWindow import AttributeWindow
-from ResultsWindow import ResultsWindow
+from GUIAttributeWindow import AttributeWindow
+from GUIResultsWindow import ResultsWindow
 import time
 import threading
 import thread
