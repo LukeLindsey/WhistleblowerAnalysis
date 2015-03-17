@@ -22,10 +22,12 @@ targetSentiment = [1,1,1,1]
 args = { 'location' : None }
 
 class Interface:
-	def __init__(self, search_packet):
+	def __init__(self):
 		self.db = dbFacade()
 		self.db.connect()
 		self.db.create_keyspace_and_schema()
+
+	def initialize_scorer(self, search_packet):
 		self.scorer = Scorer(search_packet)
 	
 	'''

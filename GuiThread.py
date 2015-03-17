@@ -16,13 +16,13 @@ search arguments.
 '''
 
 class GuiThread(threading.Thread):
-	def __init__(self, attributes, args):
+	def __init__(self, interface, attributes, args):
 		threading.Thread.__init__(self)
-		self.interface = None
+		self.interface = interface
 		self.search_packet = SearchPacket(attributes)
 		self.args = args
 	def run(self):
-		self.interface = Interface(self.search_packet)
+		self.interface.initialize_scorer(self.search_packet)
 		self.query = self.search_packet.getQuery()
 		self.interface.search(self.query, self.args)
 		self.interface.score()

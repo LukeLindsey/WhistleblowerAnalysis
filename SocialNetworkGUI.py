@@ -34,7 +34,7 @@ class App():
 
 	def search(self):
 		self.start_button.config(state = DISABLED)
-		self.thread = GuiThread(self.attributes, self.get_search_arguments())
+		self.thread = GuiThread(Interface(), self.attributes, self.get_search_arguments())
 		self.thread.start()
 		
 		while self.thread.interface == None:
