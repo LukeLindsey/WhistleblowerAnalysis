@@ -3,6 +3,7 @@ Created on Feb 16, 2015
 
 @author: Randy
 '''
+
 from Tkinter import *
 from tkFileDialog import *
 from Attribute import Attribute
@@ -10,6 +11,7 @@ from SearchPacket import SearchPacket
 from GuiThread import GuiThread
 from AttributeWindow import AttributeWindow
 from ResultsWindow import ResultsWindow
+from EnronSearch.EnronInterface import EnronInterface
 
 class App:
 	
@@ -26,10 +28,25 @@ class App:
 		self.create_main_window_controls()
 
 	def search(self):
-		pass
+		self.start_button.config(state = DISABLED)
+		self.thread = GuiThread(EnronInterface(), self.attributes, {})
+		self.thread.start()
+		
+		while self.thread.interface == None:
+			time.sleep(1)
+
+		self.interface = self.thread.interface
+		self.stop_button.config(state = NORMAL)
 
 	def stop(self):
-		pass
+		self.stop_button.config(state = DISABLED)
+
+		if self.thread.isAlive():
+			self.thread.stop()
+			self.thread.join()
+	
+		self.show_results_window()
+		self.start_button.config(state = NORMAL)
 
 	def initialize_attributes(self):
 		pass		
