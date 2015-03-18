@@ -5,6 +5,7 @@ Created on Feb 16, 2015
 '''
 
 from Tkinter import *
+import tkMessageBox
 from tkFileDialog import *
 from Attribute import Attribute
 from SearchPacket import SearchPacket
@@ -16,6 +17,7 @@ from EnronSearch.EnronInterface import EnronInterface
 class App:
 	
 	attributes = []
+	args = {}
 
 	def __init__(self, master): 
 		self.frame = Frame(master)
@@ -28,8 +30,13 @@ class App:
 		self.create_main_window_controls()
 
 	def search(self):
+		self.args['folder_location'] = self.folder_input_box.get()
+		if self.args['folder_location'] == "":
+			tkMessageBox.showinfo("Oops", "Must set a folder directory")	
+			return 0 
+
 		self.start_button.config(state = DISABLED)
-		self.thread = GuiThread(EnronInterface(), self.attributes, {})
+		self.thread = GuiThread(EnronInterface(), self.attributes, self.args)
 		self.thread.start()
 		
 		while self.thread.interface == None:

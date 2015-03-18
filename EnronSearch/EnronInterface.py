@@ -1,8 +1,10 @@
 from SearchInterface import SearchInterface
+from EnronThread import EnronThread
 from dbFacade import dbFacade
 from Scorer import Scorer
 import EnronSearch
 import time
+import threading
 
 
 class EnronInterface(SearchInterface):
@@ -11,9 +13,9 @@ class EnronInterface(SearchInterface):
 	Starts search crawling threads with inputed query string.
 	'''
 	def search(self, query, args):
-		#self.thread = EnronThread()
-		#self.thread.start()
-		#self.thread.join()
+		self.thread = EnronThread(self.db, self.scorer, query, args)
+		self.thread.start()
+		self.thread.join()
 		time.sleep(5)
 
 	'''
@@ -22,14 +24,14 @@ class EnronInterface(SearchInterface):
 	'''
 	def stop_search(self):
 		print "Closing threads.."
-		'''try:		
+		try:		
 			self.thread.raiseExc(KeyboardInterrupt)
 		except threading.ThreadError:
 			pass
 
 		while self.thread.isAlive():
 			time.sleep(1)
-		self.thread.join()'''
+		self.thread.join()
 
 	@staticmethod
 	def print_statistics(enron_search):

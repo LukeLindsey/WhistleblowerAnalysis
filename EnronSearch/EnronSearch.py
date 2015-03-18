@@ -6,9 +6,10 @@ from nltk.tokenize import sent_tokenize
 
 class EnronSearch:
 
-	def __init__(self, word_deck, db, scorer, email_main_directory='/users/lukelindsey/Downloads/enron_mail_20110402/maildir/'):
+	def __init__(self, word_deck, db, scorer, email_main_directory):
 		self.word_deck = word_deck
-		self.email_main_directory = email_main_directory
+		print self.word_deck
+		self.email_main_directory = email_main_directory + '/'
 		self.db = db
 		self.scorer = scorer
 		self.total_users = 0
@@ -16,10 +17,6 @@ class EnronSearch:
 		self.total_sentences_matched = 0
 		self.start_time = datetime.now()
 		self.end_time = datetime.now()
-
-		# Windows (Brenden's machine)
-		if os.name == 'nt':
-			self.email_main_directory = "C:\\Users\\Brenden\\Downloads\\enron\\enron_mail_20110402\\maildir\\"
 
 	def search_enron(self):
 
@@ -50,11 +47,11 @@ class EnronSearch:
 		for word in self.word_deck:
 			if word in email:
 				sentences = EnronSearch.extract_sentences(word, email)
+
 				for sentence in sentences:
 					score = float(self.scorer.score(sentence))
-					self.db.add_post(user, 'Enron', sentence, word, score)
+					self.db.add_post(user, 'Enron', sentence.replace("'", "''"), word, score)
 					self.total_sentences_matched += 1
-					# self.db.add_user(user_dir, 0, 'Enron')
 
 	@staticmethod
 	def extract_sentences(word_to_search, email):
