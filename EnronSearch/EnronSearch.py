@@ -45,7 +45,7 @@ class EnronSearch:
 		email = emailformat.format_email(email)  # remove the junk
 
 		for word in self.word_deck:
-			if word in email:
+			if word.lower() in email.lower():
 				sentences = EnronSearch.extract_sentences(word, email)
 
 				for sentence in sentences:
@@ -60,5 +60,5 @@ class EnronSearch:
 
 		sentence_list = sent_tokenize(email)
 		for sentence in sentence_list:
-			if word_to_search in sentence:
+			if word_to_search.lower() in sentence.lower():
 				yield sentence

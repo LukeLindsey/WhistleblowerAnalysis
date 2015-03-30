@@ -150,7 +150,7 @@ class GooglePlusSearch(object):
 				this_location = (this_location["latitude"], this_location["longitude"])
 				if haversine(this_location, location_center) > location_radius:
 					results.remove(result)
-			except KeyError:  # location not provided, remove the result
+			except KeyError:  # location not provided, so remove this result
 				results.remove(result)
 		return results
 
