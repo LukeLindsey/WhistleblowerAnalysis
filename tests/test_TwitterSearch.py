@@ -5,6 +5,8 @@ from SocialNetworkSearch.TwitterAPIWrapper import TwitterAPIWrapper
 from SocialNetworkSearch.Tweet import Tweet
 from dbFacade import dbFacade
 from Scorer import Scorer
+from Attribute import Attribute
+from SearchPacket import SearchPacket
 
 class test_TwitterSearch(unittest.TestCase):
 
@@ -12,16 +14,19 @@ class test_TwitterSearch(unittest.TestCase):
 	def setUpClass(self):
 		words = ['pizza', 'tacos', 'burgers', 'fries']
 		weights = [1,3,2,2]
-		targetSentiment = [1,1,1,1]    
+		sentiments = [1,1,1,1]    
 		self.args = { 'location' : None, 'since' : None, 'until' : None }
 		self.query = "pizza OR tacos OR burgers OR fries"
+		attribute = Attribute("Attribute1", 1, words, weights, sentiments)
+		attributes = [attribute]
+		search_packet = SearchPacket(attributes)
+		self.scorer = Scorer(search_packet)
 	
 		self.db = dbFacade()
 		self.db.connect()
 		self.db.create_keyspace_and_schema()
 		self.api = TwitterAPIWrapper()
 		self.api.login()
-		self.scorer = Scorer(zip(words, weights, targetSentiment))
 	
 	def test_create_instance_with_valid_arguments(self):
 		search = TwitterSearch(self.api, self.db, self.scorer, self.query, self.args)
