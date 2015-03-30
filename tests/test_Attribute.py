@@ -146,7 +146,7 @@ class test_Attribute(unittest.TestCase):
 		
 	def test900_012_getweights_none(self):
 		a = Attribute()
-		self.assertIsNone(a.get_words)
+		self.assertIsNone(a.get_words())
 		
 	def test900_013_getsentiments(self):
 		self.assertEquals(self.test.get_sentiments(), [-1])
@@ -162,7 +162,7 @@ class test_Attribute(unittest.TestCase):
 	def test900_900_getword_badindex(self):
 		correctError = "get_word: "
 		try:
-			self.test.get_name(10000)
+			self.test.get_word(10000)
 			self.fail("Error: no error!")
 		except ValueError, e:
 			self.assertEqual(correctError, str(e)[:len(correctError)])
@@ -213,7 +213,7 @@ class test_Attribute(unittest.TestCase):
 		correctError = "get_word: "
 		try:
 			a = Attribute()
-			self.test.get_max_score()
+			a.get_max_score()
 			self.fail("Error: no error!")
 		except ValueError, e:
 			self.assertEqual(correctError, str(e)[:len(correctError)])

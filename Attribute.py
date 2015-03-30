@@ -74,9 +74,15 @@ class Attribute():
 		self.sentiments = sentiments
 
 	def get_word(self, index):
+		if index >= len(self.words):
+			raise ValueError("get_word: Index out of bounds.")
+		
 		return self.words[index]
 
 	def get_weight(self, index):
+		if index >= len(self.words):
+			raise ValueError("get_word: Index out of bounds.")
+	
 		if self.weights[index] == 3:
 			return "High"
 		elif self.weights[index] == 2:
@@ -85,19 +91,31 @@ class Attribute():
 			return "Low"
 			
 	def get_weight_num(self, index):
+		if index >= len(self.words):
+			raise ValueError("get_word: Index out of bounds.")
+			
 		return self.weights[index]
 
 	def get_sentiment(self, index):
+		if index >= len(self.words):
+			raise ValueError("get_word: Index out of bounds.")
+			
 		if self.sentiments[index] == 1:
 			return "Positive"
 		else:
 			return "Negative"
 			
 	def get_sentiment_num(self, index):
+		if index >= len(self.words):
+			raise ValueError("get_word: Index out of bounds.")
+			
 		return self.sentiments[index]
 			
 	def get_size(self):
-		return len(self.words)
+		if self.words is None:
+			return 0
+		else:
+			return len(self.words)
 			
 	'''
 	The following functions are for bulk processing in the SearchPacket class.
@@ -124,4 +142,7 @@ class Attribute():
 		return self.sentiments
 		
 	def get_max_score(self):
+		if self.words is None or len(self.words) == 0:
+			raise ValueError("get_word: No words to calculate score.")
+			
 		return sum(self.weights)
