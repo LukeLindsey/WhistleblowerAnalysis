@@ -1,7 +1,7 @@
 import unittest
 from Attribute import Attribute #CHANGETHIS
 
-class AttributeTests(unittest.TestCase):
+class test_Attribute(unittest.TestCase):
 	def setUp(self):
 		self.test = Attribute("test", 1, ["tests"], [1], [-1])
 
