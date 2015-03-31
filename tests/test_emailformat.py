@@ -9,6 +9,9 @@ class test_emailformat(unittest.TestCase):
 	@classmethod
 	def setUpClass(self):
 		self.email_main_dir = "/home/whistleblower/Downloads/enron_mail_20110402/maildir/"
+
+		if _platform == "darwin":  # OS X
+			self.email_main_dir = '/users/lukelindsey/Downloads/enron_mail_20110402/maildir/'
 		#home/whistleblower/Downloads/enron_mail_20110402/maildir
 
 	# format_email tests
