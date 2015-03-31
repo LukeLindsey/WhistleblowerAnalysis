@@ -36,6 +36,9 @@ def remove_forwards(email):
 	forward_pattern = re.compile("---------------------- Forwarded by.+---------------------------", re.DOTALL)
 	forward_patterns = [forward_pattern]
 
+	forward_pattern = re.compile("----- Forwarded by.+ -----")
+	forward_patterns.append(forward_pattern)
+
 	# use below to add when other formats are found
 	# forward_pattern = re.compile("this")
 	# forward_patterns.append(forward_pattern)
@@ -81,6 +84,10 @@ def remove_replies(email):
 
 	# modeled after 'bass-e/sent/10 aka 'To:' style
 	reply_pattern = re.compile("\nTo:.*cc:.*Subject:", re.DOTALL)
+	re_replies_formats.append(reply_pattern)
+
+	# modeled after dasovic-j/sent/1024 aka =09 in front of each line of the reply
+	reply_pattern = re.compile("\n.{1,40}@.{1,22}\n{1,2}.{1,6}/.{1,3}/.{1,32}To:.*\n.{0,10}cc:.*\n.{0,10}Subject:", re.DOTALL)
 	re_replies_formats.append(reply_pattern)
 
 	for reply_pat in re_replies_formats:
