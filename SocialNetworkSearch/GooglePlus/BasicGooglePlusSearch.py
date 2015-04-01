@@ -1,5 +1,6 @@
 from GooglePlusSearch import GooglePlusSearch
 import sys
+import traceback
 
 
 """
@@ -58,20 +59,21 @@ class BasicSearch(GooglePlusSearch):
 				results_total = super(BasicSearch, self).get_20_search_results(page_token)
 				results = results_total["items"]
 
-				if self.location_search:
+				'''if self.location_search:
 					results = super(BasicSearch, self).filter_by_location(results, self.location_center, self.location_radius)
 
 				if self.date_search:
-					results = super(BasicSearch, self).filter_by_date(results, self.from_date)
+					results = super(BasicSearch, self).filter_by_date(results, self.from_date)'''
 
 				posts = super(BasicSearch, self).create_google_objects(results)
 				super(BasicSearch, self).store_posts_in_database(posts)
 			except Exception as e:
-				print "failing at line 73 in BasicGooglePlusSearch"
-				exc_type, exc_obj, exc_tb = sys.exc_info()
-				print 'type: ' + str(exc_type)
-				print(e)
-				sys.exit(0)
+				#print "failing at line 73 in BasicGooglePlusSearch"
+				#exc_type, exc_obj, exc_tb = sys.exc_info()
+				#print 'type: ' + str(exc_type)
+				#print(e)
+				traceback.print_exception(*exc_info)
+				#sys.exit(0)
 			try:
 				page_token = results_total["nextPageToken"]
 			except KeyError:

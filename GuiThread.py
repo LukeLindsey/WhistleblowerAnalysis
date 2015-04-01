@@ -1,6 +1,5 @@
 import threading
 import time
-from SocialNetworkSearch.Interface import Interface
 from SearchPacket import SearchPacket
 
 '''

@@ -80,7 +80,10 @@ class GooglePlusSearch(object):
 			raise TypeError('Posts argument must be a list of Google Posts')
 
 		for plus_post in plus_posts:
-			author = plus_post.author.encode('utf-8')
+			try:
+				author = plus_post.author.encode('utf-8')
+			except UnicodeDecodeError:
+				author = plus_post.author.decode('utf-8')
 			try:
 				post = plus_post.post.encode('utf-8').replace("'", "''")
 			except UnicodeDecodeError:

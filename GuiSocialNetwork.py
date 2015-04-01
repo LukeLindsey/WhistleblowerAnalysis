@@ -7,12 +7,15 @@ Created on Feb 18, 2015
 '''
 
 from Tkinter import *
-from SocialNetworkSearch.Interface import Interface
+#from SocialNetworkSearch.GooglePlus.Interface import Interface
 from Attribute import Attribute
 from SearchPacket import SearchPacket
 from GuiThread import GuiThread
 from GuiAttributeWindow import AttributeWindow
 from GuiResultsWindow import ResultsWindow
+#import SocialNetworkSearch.GooglePlus.Interface as GoogleInterface
+#import SocialNetworkSearch.Interface as TwitterInterface
+from SearchInterface import SearchInterface
 import time
 import threading
 import thread
@@ -33,8 +36,11 @@ class App():
 		self.create_main_window_controls()
 
 	def search(self):
+		if not self.check_valid_search_arguments():
+			return	
+
 		self.start_button.config(state = DISABLED)
-		self.thread = GuiThread(Interface(), self.attributes, self.get_search_arguments())
+		self.thread = GuiThread(SearchInterface(), self.attributes, self.get_search_arguments())
 		self.thread.start()
 		
 		while self.thread.interface == None:
@@ -52,6 +58,13 @@ class App():
 	
 		self.show_results_window()
 		self.start_button.config(state = NORMAL)
+
+	def check_valid_search_arguments(self):
+		if self.twitter_enabled.get():
+			return True
+		if self.google_enabled.get():
+			return True
+		return False
 
 	def initialize_attribute_objects(self):
 		for i in range(0, 5): 
@@ -74,6 +87,13 @@ class App():
 		args['location'] = None
 		args['until'] = None
 		args['since'] = None
+		args['Twitter'] = None
+		args['GooglePlus'] = None
+
+		if self.twitter_enabled.get():
+			args['Twitter'] = True
+		if self.google_enabled.get():
+			args['GooglePlus'] = True
 
 		if not self.location.get() == "":
 			args['location'] = self.location.get()
@@ -133,12 +153,12 @@ class App():
 		Label(options, text="Options", font = "Verdana 10 bold").grid(row=0, pady=5, sticky=W)
 		Label(options, text="Web Sites").grid(row=1, pady=5, sticky=W)
 
-		twitter_enabled = IntVar()
-		Checkbutton(options, text="Twitter", variable=twitter_enabled).grid(row=2,
+		self.twitter_enabled = IntVar()
+		Checkbutton(options, text="Twitter", variable=self.twitter_enabled).grid(row=2,
 				    sticky=W, padx=15)
 
-		google_enabled = IntVar()
-		googleCheck = Checkbutton(options, text="Google+", variable=google_enabled)
+		self.google_enabled = IntVar()
+		googleCheck = Checkbutton(options, text="Google+", variable=self.google_enabled)
 		googleCheck.config(state = DISABLED)
 		googleCheck.grid(row=3, sticky=W, padx=15)
 
