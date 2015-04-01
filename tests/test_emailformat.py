@@ -12,7 +12,6 @@ class test_emailformat(unittest.TestCase):
 
 		if _platform == "darwin":  # OS X
 			self.email_main_dir = '/users/lukelindsey/Downloads/enron_mail_20110402/maildir/'
-		#home/whistleblower/Downloads/enron_mail_20110402/maildir
 
 	# format_email tests
 	def test_format_email_with_tags_only(self):

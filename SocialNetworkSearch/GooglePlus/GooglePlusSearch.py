@@ -123,7 +123,9 @@ class GooglePlusSearch(object):
 		post = GooglePost(search_result)
 		return post
 
-	'''Given a list of 'item's and returns a list of the filtered items'''
+	'''Given a list of 'item's and returns a list of the filtered items
+	Expects the date as a string in format "2011-05-10" Where the month and
+	date are always 2 digits long (needs a preceding 0 for one digit months/days)'''
 	@staticmethod
 	def filter_by_date(results, from_date):
 		for result in results:
