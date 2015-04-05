@@ -1,6 +1,8 @@
 import threading
 import time
 from SearchPacket import SearchPacket
+from SearchInterface import SearchInterface
+from Attribute import Attribute
 
 '''
 This class controls the backend of the Whistleblower tools.
@@ -16,6 +18,23 @@ search arguments.
 
 class GuiThread(threading.Thread):
 	def __init__(self, interface, attributes, args):
+		if interface is None:
+			raise TypeError('interface argument required')
+		elif attributes is None:
+			raise TypeError('attributes argument required')
+		elif args is None:
+			raise TypeError('args argument required')
+		elif not isinstance(interface, SearchInterface):
+			raise TypeError('SearchInterface instance required')
+		elif not isinstance(attributes, list):
+			raise TypeError('attributes argument must be a list')
+		elif not isinstance(args, dict):
+			raise TypeError('args argument must be a dictionary')
+		elif not len(attributes) > 0:
+			raise TypeError('at least one Attribute required')
+		elif not isinstance(attributes[0], Attribute):
+			raise TypeError('Attributes list must contain Attribute instances')
+
 		threading.Thread.__init__(self)
 		self.interface = interface
 		self.search_packet = SearchPacket(attributes)
