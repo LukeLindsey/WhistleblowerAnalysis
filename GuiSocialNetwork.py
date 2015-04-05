@@ -7,14 +7,12 @@ Created on Feb 18, 2015
 '''
 
 from Tkinter import *
-#from SocialNetworkSearch.GooglePlus.Interface import Interface
+import tkMessageBox
 from Attribute import Attribute
 from SearchPacket import SearchPacket
 from GuiThread import GuiThread
 from GuiAttributeWindow import AttributeWindow
 from GuiResultsWindow import ResultsWindow
-#import SocialNetworkSearch.GooglePlus.Interface as GoogleInterface
-#import SocialNetworkSearch.Interface as TwitterInterface
 from SearchInterface import SearchInterface
 import time
 import threading
@@ -60,11 +58,18 @@ class App():
 		self.start_button.config(state = NORMAL)
 
 	def check_valid_search_arguments(self):
-		if self.twitter_enabled.get():
-			return True
-		if self.google_enabled.get():
-			return True
-		return False
+		if not self.twitter_enabled.get():
+			if not self.google_enabled.get():
+				tkMessageBox.showinfo("Invalid search parameters", 
+					"Atleast one social media site must be selected.")
+				return False
+
+		for attribute in self.attributes:
+			if not attribute.words:
+				tkMessageBox.showinfo("Invalid search parameters", 
+					"Atleast one attribute needs to be defined with at least one word.")
+				return False
+		return True
 
 	def initialize_attribute_objects(self):
 		for i in range(0, 5): 
@@ -159,7 +164,7 @@ class App():
 
 		self.google_enabled = IntVar()
 		googleCheck = Checkbutton(options, text="Google+", variable=self.google_enabled)
-		googleCheck.config(state = DISABLED)
+		#googleCheck.config(state = DISABLED)
 		googleCheck.grid(row=3, sticky=W, padx=15)
 
 		Label(options, text="Location").grid(row=4, sticky=W, pady=5, padx=5)
