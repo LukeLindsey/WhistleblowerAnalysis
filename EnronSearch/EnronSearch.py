@@ -44,21 +44,26 @@ class EnronSearch:
 
 		email = emailformat.format_email(email)  # remove the junk
 
+		index = 0
+
 		for word in self.word_deck:
 			if word.lower() in email.lower():
-				sentences = EnronSearch.extract_sentences(word, email)
+				sentences = EnronSearch.extract_sentences(self.word_deck[index:], email)
 
 				for sentence in sentences:
 					score = float(self.scorer.score(sentence))
 					self.db.add_post(user, 'Enron', sentence.replace("'", "''"), word, score)
 					self.total_sentences_matched += 1
+			index += 1
 
 	@staticmethod
-	def extract_sentences(word_to_search, email):
+	def extract_sentences(words_to_search, email):
 		"""This method returns a generator of sentences that contain the
 		word passed in as a parameter"""
 
 		sentence_list = sent_tokenize(email)
 		for sentence in sentence_list:
-			if word_to_search.lower() in sentence.lower():
-				yield sentence
+			for word_to_search in words_to_search:
+				if word_to_search.lower() in sentence.lower():
+					yield sentence
+					break
