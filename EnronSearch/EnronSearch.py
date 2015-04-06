@@ -1,5 +1,6 @@
 import os
 import emailformat
+import re
 from datetime import datetime
 from nltk.tokenize import sent_tokenize
 
@@ -48,7 +49,9 @@ class EnronSearch:
 
 		for word in self.word_deck:
 			if word.lower() in email.lower():
-				sentences = EnronSearch.extract_sentences(self.word_deck[index:], email)
+				sentences = self.extract_sentences(index, email)
+
+				EnronSearch.clean_sentences(sentences)
 
 				for sentence in sentences:
 					score = float(self.scorer.score(sentence))
@@ -56,14 +59,24 @@ class EnronSearch:
 					self.total_sentences_matched += 1
 			index += 1
 
-	@staticmethod
-	def extract_sentences(words_to_search, email):
+	def extract_sentences(self, word_index, email):
 		"""This method returns a generator of sentences that contain the
 		word passed in as a parameter"""
-
+		words_to_search = self.word_deck[word_index:]
 		sentence_list = sent_tokenize(email)
+
 		for sentence in sentence_list:
 			for word_to_search in words_to_search:
 				if word_to_search.lower() in sentence.lower():
 					yield sentence
 					break
+
+	@staticmethod
+	def clean_sentences(list_of_sentences):
+		space_pattern = re.compile('\s{2,}')
+		index = 0
+
+		for sentence in list_of_sentences:
+			sentence = sentence.replace('\n', ' ')
+			list_of_sentences[index] = re.sub(space_pattern, ' ', sentence)
+			index += 1
