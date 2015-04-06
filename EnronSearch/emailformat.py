@@ -90,6 +90,10 @@ def remove_replies(email):
 	reply_pattern = re.compile("\n.{1,40}@.{1,22}\n{1,2}.{1,6}/.{1,3}/.{1,32}To:.*\n.{0,10}cc:.*\n.{0,10}Subject:", re.DOTALL)
 	re_replies_formats.append(reply_pattern)
 
+	# modeled after bass-e/sent/330 aka external list style
+	reply_pattern = re.compile("\nContent-transfer-encoding: .{1,10}\n")
+	re_replies_formats.append(reply_pattern)
+
 	for reply_pat in re_replies_formats:
 		email = re.split(reply_pat, email, 1)[0]
 
