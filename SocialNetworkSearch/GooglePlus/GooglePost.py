@@ -14,6 +14,7 @@ class GooglePost(object):
 		self.author = actor["displayName"]
 		my_object = result["object"]
 		self.post = my_object["content"]
+		self.post = self.post.replace('\\ufeff', '')  # remove endian order code
 		self.date = result["updated"]
 
 # might add location and/or url
