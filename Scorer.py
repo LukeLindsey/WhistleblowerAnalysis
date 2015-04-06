@@ -1,6 +1,7 @@
 #from nltk.corpus import movie_reviews
 from textblob import TextBlob, Word
 from SearchPacket import SearchPacket
+from TextPreprocessor import TextPreprocessor
 
 '''
 This class will be fed words and their significance.
@@ -24,13 +25,14 @@ class Scorer():
 	Ignore subjectivity. Use absolute value of polarity.
 	'''
 	def score(self, text):
-		blob = TextBlob(text.lower())
+		processed = TextPreprocessor(text)
+		bagOfWords = processed.get_tokens() #LINE WILL CHANGE
 		scores = []
 		
 		for attr in self.packet.getAttributes():
 			score = 0
 			for i in range(0, attr.get_size()):
-				if attr.get_word(i) in blob.words:
+				if attr.get_word(i) in bagOfWords:
 					score += attr.get_weight_num(i)
 			scores.append(float(score) / attr.get_max_score())
 			
@@ -50,27 +52,3 @@ class Scorer():
 					score += weight * polarity
 				
 		return score'''
-			
-	'''
-	Spellchecks, then lemmatizes (gets rid of plural and conjugations).
-	TODO: Doesn't play well with verb unless I provide parameter 'v'?
-	'''
-	def rootword(self, text):
-		return Word(text).correct().lemmatize()
-	
-'''
-Simple main function right here. It will definitely change as it
-gives way to real unit tests.
-'''
-if __name__ == "__main__":
-	words = ["happy", "joy", "buddies", "good", "love", "hate"]
-	weights = [1,3,2,2,1,1]
-	targetSentiment = [1,1,1,1,1,-1]
-	s = Scorer(zip(words,weights,targetSentiment))
-		
-	test = ""
-	while True:
-		print "Enter input: "
-		test = raw_input()
-		print s.score(test)
-		print

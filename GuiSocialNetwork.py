@@ -61,15 +61,21 @@ class App():
 		if not self.twitter_enabled.get():
 			if not self.google_enabled.get():
 				tkMessageBox.showinfo("Invalid search parameters", 
-					"Atleast one social media site must be selected.")
+					"At least one social media site must be selected.")
 				return False
 
+		validAttribute = False
 		for attribute in self.attributes:
-			if not attribute.words:
-				tkMessageBox.showinfo("Invalid search parameters", 
-					"Atleast one attribute needs to be defined with at least one word.")
-				return False
-		return True
+			if attribute.words:
+				validAttribute = True
+				break
+				
+		if not validAttribute:
+			tkMessageBox.showinfo("Invalid search parameters", 
+					"At least one attribute needs to be defined with at least one word.")
+			return False
+		else:
+			return True
 
 	def initialize_attribute_objects(self):
 		for i in range(0, 5): 
