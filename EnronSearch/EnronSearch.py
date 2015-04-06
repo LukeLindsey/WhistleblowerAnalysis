@@ -51,9 +51,8 @@ class EnronSearch:
 			if word.lower() in email.lower():
 				sentences = self.extract_sentences(index, email)
 
-				EnronSearch.clean_sentences(sentences)
-
 				for sentence in sentences:
+					sentence = EnronSearch.clean_sentence(sentence)
 					score = float(self.scorer.score(sentence))
 					self.db.add_post(user, 'Enron', sentence.replace("'", "''"), word, score)
 					self.total_sentences_matched += 1
@@ -72,11 +71,8 @@ class EnronSearch:
 					break
 
 	@staticmethod
-	def clean_sentences(list_of_sentences):
+	def clean_sentence(sentence):
 		space_pattern = re.compile('\s{2,}')
-		index = 0
-
-		for sentence in list_of_sentences:
-			sentence = sentence.replace('\n', ' ')
-			list_of_sentences[index] = re.sub(space_pattern, ' ', sentence)
-			index += 1
+		sentence = sentence.replace('\n', ' ')
+		sentence = re.sub(space_pattern, ' ', sentence)
+		return sentence
