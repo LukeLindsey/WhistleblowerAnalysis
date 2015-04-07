@@ -1,4 +1,3 @@
-from Lemmatizer import Lemmatizer
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 from textblob import TextBlob, Word
