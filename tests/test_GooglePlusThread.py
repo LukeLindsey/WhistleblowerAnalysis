@@ -1,6 +1,5 @@
 import unittest
 from SocialNetworkSearch.GooglePlus.GooglePlusThread import GooglePlusThread
-#from SocialNetworkSearch.GooglePlus.GoogleAPIWrapper import GoogleAPIWrapper
 from dbFacade import dbFacade
 from Scorer import Scorer
 from Attribute import Attribute
@@ -25,7 +24,6 @@ class test_GooglePlusThread(unittest.TestCase):
 		self.db = dbFacade()
 		# self.db.connect()
 		# self.db.create_keyspace_and_schema()
-		#self.api_key = GoogleAPIWrapper.get_api_key()
 
 	def test_create_instance_with_valid_args(self):
 		GooglePlusThread(db=self.db, scorer=self.scorer, query=self.query)

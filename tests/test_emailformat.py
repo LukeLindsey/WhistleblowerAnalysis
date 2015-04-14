@@ -4,6 +4,7 @@ from sys import platform as _platform
 
 """__author__ = 'LukeLindsey' """
 
+
 class test_emailformat(unittest.TestCase):
 
 	@classmethod
