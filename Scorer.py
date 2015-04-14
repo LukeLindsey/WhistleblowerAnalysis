@@ -26,29 +26,21 @@ class Scorer():
 	'''
 	def score(self, text):
 		processed = TextPreprocessor(text)
-		bagOfWords = processed.get_tokens() #LINE WILL CHANGE
-		scores = []
+		bagOfWords = processed.get_words() #LINE WILL CHANGE
+		polarity = TextBlob(processed.get_raw()).sentiment.polarity
+		score = 0
 		
 		for attr in self.packet.getAttributes():
-			score = 0
+			attrScore = 0
 			for i in range(0, attr.get_size()):
-				if attr.get_word(i) in bagOfWords:
-					score += attr.get_weight_num(i)
-			scores.append(float(score) / attr.get_max_score())
+				expectedSent = attr.get_sentiment_num(i)
+				if polarity * expectedSent >= 0:
+					word = attr.get_word(i)
+					significance = attr.get_weight_num(i)
+					attrScore += bagOfWords.count(word) * significance
+			
+			attrWeight = attr.get_attr_weight()
+			score += attrScore * attrWeight
 			
 		#print scores, text.encode('utf8')
-		return sum(scores) / float(len(scores))			
-		
-		'''Goes through each word in the text, checks if it's in it.
-		for word in blob.words:
-			#correctWord = self.rootword(word)
-			correctWord = word
-			if correctWord in self.data:
-				weight = self.data[correctWord][0]
-				polarity = self.data[correctWord][1] * blob.sentiment.polarity
-				
-				#If polarity is negative, that means the expected polarity conflicts with actual polarity. Ignore.
-				if polarity > 0:
-					score += weight * polarity
-				
-		return score'''
+		return score	

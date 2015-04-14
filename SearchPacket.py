@@ -7,7 +7,7 @@ sweet scoring action. Radical, dude!
 '''
 from nltk import word_tokenize
 from Attribute import Attribute
-#from Lemmatizer import Lemmatizer
+from Lemmatizer import Lemmatizer
 
 class SearchPacket:
 	'''
@@ -22,6 +22,7 @@ class SearchPacket:
 	'''
 	def __init__(self, attributes):
 		self.attributes = []
+		self.lemma = Lemmatizer()
 	
 		for attr in attributes:
 			try:
@@ -51,6 +52,7 @@ class SearchPacket:
 			raise ValueError("sanitizeAttribute: Bad attribute weight.")
 			
 		dirtyWords = attr.get_words()
+		#dirtyWords = self.lemma.lemmatizeTokens(dirtyWords)
 		dirtyWeights = attr.get_weights()
 		dirtySents = attr.get_sentiments()
 		

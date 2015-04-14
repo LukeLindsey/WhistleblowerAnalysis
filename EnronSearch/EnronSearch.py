@@ -54,8 +54,9 @@ class EnronSearch:
 				for sentence in sentences:
 					sentence = EnronSearch.clean_sentence(sentence)
 					score = float(self.scorer.score(sentence))
-					self.db.add_post(user, 'Enron', sentence.replace("'", "''"), word, score)
-					self.total_sentences_matched += 1
+					if score > 0:
+						self.db.add_post(user, 'Enron', sentence.replace("'", "''"), word, score)
+						self.total_sentences_matched += 1
 			index += 1
 
 	def extract_sentences(self, word_index, email):

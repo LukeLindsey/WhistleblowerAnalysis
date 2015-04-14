@@ -1,3 +1,4 @@
+from Lemmatizer import Lemmatizer
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 from textblob import TextBlob, Word
@@ -15,7 +16,7 @@ What may come:
 '''
 class TextPreprocessor:
 	def __init__(self, text):
-		#self.lemmatizer = Lemmatizer()
+		self.lemmatizer = Lemmatizer()
 		
 		self.raw = text
 		self.tokens = []
@@ -33,16 +34,27 @@ class TextPreprocessor:
 		text = text.lower()
 		preprocessed["original"] = text.lower()
 		
-		#t0 = time.time()
+		t0 = time.time()
 		self.tokens = word_tokenize(text)
+		
+		stop = stopwords.words("english")
+		self.tokens = [word for word in self.tokens if word not in stop] #clear it of pesky stop words
 		#self.spellchecked = self.spellcheck(self.tokens)
-		#self.lemmatized = self.lemmatizer.lemmatizeTokens(self.spellchecked)
-		#print "Time:", time.time()-t0
+		self.lemmatized = self.lemmatizer.lemmatizeTokens(self.tokens)
+		
+		#TODO: Get rid of timing stuff when necessary
+		t1 = time.time()
+		if t1-t0 > 1:	
+			print "Time:", t1-t0
+			print "Text:", text
+			print "\tFixed:", self.get_words()
+			print
 		
 	'''
 	Uses the textblob library to attempt to check the speller.
 	The textblob checker is based on Peter Norvig's implementation: http://norvig.com/spell-correct.html
 	It has about a 70% accuracy.
+	@PROBLEM: This takes way too long. What's the dealio!
 	'''
 	def spellcheck(self, tokens):
 		newTokens = []
@@ -62,7 +74,7 @@ class TextPreprocessor:
 		
 	'''getters'''
 	def get_raw(self):
-		return raw
+		return self.raw
 		
 	def get_tokens(self):
 		return self.tokens
@@ -73,3 +85,6 @@ class TextPreprocessor:
 	def get_lemmatized(self):
 		return self.lemmatized
 		
+	'''A sort of default getter so I don't have to keep changing things.'''
+	def get_words(self):
+		return self.lemmatized
