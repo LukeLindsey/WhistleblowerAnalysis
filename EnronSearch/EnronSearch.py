@@ -70,6 +70,7 @@ class EnronSearch:
 					if score > 0:
 						self.db.add_post(user, 'Enron', sentence.replace("'", "''"), word, score)
 						self.total_sentences_matched += 1
+				break
 			index += 1
 
 	def extract_sentences(self, word_index, email):
