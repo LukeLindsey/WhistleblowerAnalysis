@@ -11,7 +11,7 @@ from Scorer import Scorer
 
 class EnronThread(CrawlThread):
 
-	def __init__(self, db, scorer, query, args):
+	def __init__(self, db=None, scorer=None, query=None, args=None):
 		if not isinstance(db, dbFacade):
 			raise TypeError('dbFacade instance required')
 		elif not isinstance(scorer, Scorer):

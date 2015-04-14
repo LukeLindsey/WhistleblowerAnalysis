@@ -1,9 +1,5 @@
 import unittest
 from EnronSearch.EnronInterface import EnronInterface
-from dbFacade import dbFacade
-from Scorer import Scorer
-from Attribute import Attribute
-from SearchPacket import SearchPacket
 
 """__author__ = 'LukeLindsey' """
 

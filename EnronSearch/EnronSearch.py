@@ -3,11 +3,24 @@ import emailformat
 import re
 from datetime import datetime
 from nltk.tokenize import sent_tokenize
+from dbFacade import dbFacade
+from Scorer import Scorer
 
 
 class EnronSearch:
 
-	def __init__(self, word_deck, db, scorer, email_main_directory):
+	def __init__(self, word_deck=None, db=None, scorer=None, email_main_directory=None):
+		if not isinstance(word_deck, list):
+			raise TypeError('word_deck must be a list')
+		elif not isinstance(word_deck[0], str):
+			raise TypeError('word deck must contain strings')
+		elif not isinstance(db, dbFacade):
+			raise TypeError('dbFacade instance required')
+		elif not isinstance(scorer, Scorer):
+			raise TypeError('Scorer instance required')
+		elif not isinstance(email_main_directory, str):
+			raise TypeError('directory must be a string')
+
 		self.word_deck = word_deck
 		print self.word_deck
 		self.email_main_directory = email_main_directory + '/'
