@@ -63,7 +63,9 @@ class Attribute():
 	def set_sentiments(self, sentiments):
 		newSentiments = []
 		for sentiment in sentiments:
-			if sentiment == "Positive":
+			if sentiment == "Neutral":
+				newSentiments.append(0)
+			elif sentiment == "Positive":
 				newSentiments.append(1)
 			else:
 				newSentiments.append(-1)
@@ -102,6 +104,8 @@ class Attribute():
 			
 		if self.sentiments[index] == 1:
 			return "Positive"
+		elif self.sentiments[index] == 0:
+			return "Neutral"
 		else:
 			return "Negative"
 			

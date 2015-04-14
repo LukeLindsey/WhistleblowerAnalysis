@@ -96,13 +96,9 @@ class dbFacade(object):
 		for user in users:
 			posts = self.get_posts(user['username'])
 			total = 0
-			counter = 0
 			for post in posts:
 				total += post['score']
-				counter += 1
-			if counter == 0:
-				continue
-			user['score'] = float(total) / counter
+			user['score'] = total
 			scores.append(user['score'])
 
 		return scores

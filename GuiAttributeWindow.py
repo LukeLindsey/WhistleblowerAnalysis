@@ -60,7 +60,7 @@ class AttributeWindow:
 			sentimentStr = StringVar(self.toplevel)
 	
 			weightBox = OptionMenu(self.attribute_frame, weightStr, "High", "Medium", "Low")
-			sentimentBox = OptionMenu(self.attribute_frame, sentimentStr, "Positive", "Negative")
+			sentimentBox = OptionMenu(self.attribute_frame, sentimentStr, "Neutral", "Positive", "Negative")
 
 			weightBox.config(width=7)
 			sentimentBox.config(width=7)
@@ -69,7 +69,7 @@ class AttributeWindow:
 
 			if new_attribute:
 				weightStr.set("Weight")
-				sentimentStr.set("Positive")
+				sentimentStr.set("Neutral")
 			else:
 				wordBox.insert(0, attribute.get_word(i-1))
 				weightStr.set(attribute.get_weight(i-1))
