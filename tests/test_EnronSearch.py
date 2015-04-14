@@ -23,6 +23,7 @@ class test_EnronSearch(unittest.TestCase):
 		self.directory = '/users/lukelindsey/Downloads/enron_mail_20110402/maildir'
 
 		self.db = dbFacade()
+		self.e = EnronSearch(self.words, self.db, self.scorer, self.directory)
 		# self.db.connect()
 		# self.db.create_keyspace_and_schema()
 
@@ -98,3 +99,44 @@ class test_EnronSearch(unittest.TestCase):
 			self.fail()
 		except TypeError:
 			pass
+
+	# extract sentences
+	def test_extract_sentences_entire_words_list(self):
+		expected = "I love pizza."
+		total = "I love pizza. This is the second sentence."
+		actuals = self.e.extract_sentences(0, total)
+		for actual in actuals:
+			self.assertEqual(expected, actual)
+
+	def test_extract_sentences_partial_words_list(self):
+		expected = "We are having tacos!"
+		total = "I love pizza. This is the second sentence. We are having tacos!"
+		actuals = self.e.extract_sentences(1, total)
+		for actual in actuals:
+			self.assertEqual(expected, actual)
+
+	def test_should_not_return_repeat(self):
+		expected = "Pizza and fries are pretty good."
+		total = "Pizza and fries are pretty good. This is the second sentence."
+		actuals = self.e.extract_sentences(0, total)
+		for actual in actuals:
+			self.assertEqual(expected, actual)
+
+	# clean sentences
+	def test_clean_sentences_lots_of_spaces(self):
+		expected = "Trying to remove the spaces."
+		input_string = "Trying     to       remove the spaces."
+		actual = EnronSearch.clean_sentence(input_string)
+		self.assertEqual(expected, actual)
+
+	def test_clean_sentences_lots_of_newlines(self):
+		expected = "Trying to remove the spaces."
+		input_string = "Trying \n\n\n\n\n\nto remove the\n spaces."
+		actual = EnronSearch.clean_sentence(input_string)
+		self.assertEqual(expected, actual)
+
+	def test_clean_sentences_lots_of_spaces_and_newlines(self):
+		expected = "Trying to remove the spaces."
+		input_string = "Trying\n     to      \n\n\n remove the\n\n\n spaces."
+		actual = EnronSearch.clean_sentence(input_string)
+		self.assertEqual(expected, actual)
