@@ -12,7 +12,13 @@ class EnronInterface(SearchInterface):
 	'''
 	Starts search crawling threads with inputed query string.
 	'''
-	def search(self, query, args):
+	def search(self, query=None, args=None):
+		# type checking
+		if not isinstance(query, str):
+			raise TypeError('Query must be a string')
+		elif not isinstance(args, dict):
+			raise TypeError('Args must be a dictionary')
+
 		self.thread = EnronThread(self.db, self.scorer, query, args)
 		self.thread.start()
 		self.thread.join()
