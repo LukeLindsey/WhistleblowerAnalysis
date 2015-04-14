@@ -2,7 +2,8 @@ from GoogleAPIWrapper import GoogleAPIWrapper as api
 from GooglePost import GooglePost
 import cassandra.protocol
 from haversine import haversine
-# import sys
+from dbFacade import dbFacade
+from Scorer import Scorer
 
 
 """
@@ -17,7 +18,19 @@ directly.
 
 class GooglePlusSearch(object):
 
-	def __init__(self, api_key, db, scorer, query, params={}, location_center=None, location_radius=None, from_date=None):
+	def __init__(self, api_key=None, db=None, scorer=None, query=None, params={}, location_center=None,
+				location_radius=None, from_date=None):
+		if not isinstance(api_key, str):
+			raise TypeError('api_key must be a string')
+		elif not isinstance(db, dbFacade):
+			raise TypeError('dbFacade instance required')
+		elif not isinstance(scorer, Scorer):
+			raise TypeError('Scorer instance required')
+		elif not isinstance(query, str):
+			raise TypeError('Query must be a string')
+		elif not isinstance(params, dict):
+			raise TypeError('Params must be a dictionary')
+
 		self.api_key = api_key
 		self.db = db
 		self.scorer = scorer
