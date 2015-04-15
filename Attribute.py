@@ -1,8 +1,9 @@
 '''
 
 Created on March 11, 2015
+Last edit on April 14, 2015
 
-@author: Brenden
+@author: Brenden, Justin
 
 '''
 
@@ -63,7 +64,7 @@ class Attribute():
 	def set_sentiments(self, sentiments):
 		newSentiments = []
 		for sentiment in sentiments:
-			if sentiment == "Neutral":
+			if sentiment == "Neutral" or sentiment == "Sentiment": #The latter happens when it goes unset.
 				newSentiments.append(0)
 			elif sentiment == "Positive":
 				newSentiments.append(1)
@@ -130,8 +131,16 @@ class Attribute():
 		return self.name
 		
 	'''Gets the attribute weight.'''
-	def get_attr_weight(self):
+	def get_attr_weight_num(self):
 		return self.attrWeight
+		
+	def get_attr_weight(self):
+		if self.attrWeight == 3:
+			return "High"
+		elif self.attrWeight == 2:
+			return "Medium"
+		else:
+			return "Low"
 			
 	'''Gets the entire list of attribute words.'''
 	def get_words(self):

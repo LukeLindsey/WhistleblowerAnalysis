@@ -47,7 +47,10 @@ class AttributeWindow:
 
 		Label(self.attribute_frame, text="Weight").grid(row=1, column=0, pady=5)
 		attrWeightStr = StringVar(self.toplevel)
-		attrWeightStr.set("Medium")
+		if new_attribute:
+			attrWeightStr.set("Medium")
+		else:
+			attrWeightStr.set(attribute.get_attr_weight())
 		attrWeight = OptionMenu(self.attribute_frame, attrWeightStr, "High", "Medium", "Low")
 		attrWeight.grid(row=1, column=1, sticky=W)
 
@@ -60,7 +63,7 @@ class AttributeWindow:
 			sentimentStr = StringVar(self.toplevel)
 	
 			weightBox = OptionMenu(self.attribute_frame, weightStr, "High", "Medium", "Low")
-			sentimentBox = OptionMenu(self.attribute_frame, sentimentStr, "Neutral", "Positive", "Negative")
+			sentimentBox = OptionMenu(self.attribute_frame, sentimentStr, "Positive", "Neutral", "Negative")
 
 			weightBox.config(width=7)
 			sentimentBox.config(width=7)
@@ -69,7 +72,7 @@ class AttributeWindow:
 
 			if new_attribute:
 				weightStr.set("Weight")
-				sentimentStr.set("Neutral")
+				sentimentStr.set("Sentiment")
 			else:
 				wordBox.insert(0, attribute.get_word(i-1))
 				weightStr.set(attribute.get_weight(i-1))

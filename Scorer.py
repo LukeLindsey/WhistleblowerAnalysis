@@ -39,7 +39,7 @@ class Scorer():
 					significance = attr.get_weight_num(i)
 					attrScore += bagOfWords.count(word) * significance
 			
-			attrWeight = attr.get_attr_weight()
+			attrWeight = attr.get_attr_weight_num()
 			score += attrScore * attrWeight
 			
 		#print scores, text.encode('utf8')
