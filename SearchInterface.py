@@ -49,13 +49,40 @@ class SearchInterface:
 				time.sleep(1)
 			thread.join()
 
-
 	'''
-	Retrieves users, calculates user scores, 
-	updates score in database, and prints top 10 results.
+	Retrieves users, calculates user scores, and
+	updates score in database
 	'''	
-	def score(self):
+	def score(self, progress_que):
 		print "Scoring..\n"
 		users = self.db.get_users_dict()
-		scores = self.db.calculate_user_scores(users)
-		self.db.populate_user_scores(users, scores)
+		progress_que.put(33)
+		self.populate_user_scores(users, progress_que)
+
+	def populate_user_scores(self, users, progress_que):
+		completion = 0.0
+		step_progress = ((1.0/len(users))*0.67)*100
+
+		for user in users:
+			self.update_user_score(user)
+			
+			completion = completion + step_progress
+			if completion >= 1:
+				progress_que.put(1)
+				completion = completion - 1
+				if completion < 0:
+					completion = 0.0
+
+	def update_user_score(self, user):
+		posts = self.db.get_posts(user['username'])
+		total = 0
+		for post in posts:
+			total += post['score']
+		user['score'] = total
+		
+		self.db.insert_user_score(
+			user['username'], 
+			user['score'], 
+			user['website'])
+
+

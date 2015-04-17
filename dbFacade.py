@@ -86,33 +86,6 @@ class dbFacade(object):
 				INSERT INTO %s.scored_users (username, score, website) 
 				VALUES ('%s', %s, '%s');
 				""" % (self.keyspace, username, float(score), website))
-
-	'''
-	This function should possibly be in Scorer instead of dbFacade
-	'''
-	def calculate_user_scores(self, users):
-		scores = []
-
-		for user in users:
-			posts = self.get_posts(user['username'])
-			total = 0
-			counter = 0
-			for post in posts:
-				total += post['score']
-				counter += 1
-			if counter == 0:
-				continue
-			user['score'] = float(total) / counter
-			scores.append(user['score'])
-
-		return scores
-
-	def populate_user_scores(self, users, scores):
-		for i in range(0, len(users)):
-			self.insert_user_score(
-				users[i]['username'], 
-				users[i]['score'], 
-				users[i]['website'])
 		
 	def create_keyspace_and_schema(self):
 		timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
