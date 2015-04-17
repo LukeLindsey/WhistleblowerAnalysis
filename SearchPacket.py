@@ -8,6 +8,7 @@ sweet scoring action. Radical, dude!
 from nltk import word_tokenize
 from Attribute import Attribute
 from Lemmatizer import Lemmatizer
+from nltk.corpus import stopwords
 
 class SearchPacket:
 	'''
@@ -86,9 +87,10 @@ class SearchPacket:
 		cleanWeights = []
 		cleanSents = []
 		
+		stop = stopwords.words("english")
 		for word, weight, sent in zip(dirtyWords, dirtyWeights, dirtySents):
 			word = word.lower()
-			if word in cleanWords or word == "":
+			if word in cleanWords or word in stop or word == "":
 				continue
 			if weight < 1 or weight > 3:
 				continue

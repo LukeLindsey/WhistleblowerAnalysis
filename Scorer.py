@@ -2,6 +2,8 @@
 from textblob import TextBlob, Word
 from SearchPacket import SearchPacket
 from TextPreprocessor import TextPreprocessor
+from sklearn.linear_model import LogisticRegression
+import numpy as np
 
 '''
 This class will be fed words and their significance.
@@ -28,7 +30,7 @@ class Scorer():
 		processed = TextPreprocessor(text)
 		bagOfWords = processed.get_words() #LINE WILL CHANGE
 		polarity = TextBlob(processed.get_raw()).sentiment.polarity
-		score = 0
+		scores = []
 		
 		for attr in self.packet.getAttributes():
 			attrScore = 0
@@ -40,7 +42,7 @@ class Scorer():
 					attrScore += bagOfWords.count(word) * significance
 			
 			attrWeight = attr.get_attr_weight_num()
-			score += attrScore * attrWeight
+			scores.append(attrScore * attrWeight)
 			
 		#print scores, text.encode('utf8')
-		return score	
+		return scores	
