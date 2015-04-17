@@ -2,6 +2,8 @@ import threading
 from CrawlThread import CrawlThread
 from GoogleAPIWrapper import GoogleAPIWrapper as googleAPI
 from BasicGooglePlusSearch import BasicSearch
+from dbFacade import dbFacade
+from Scorer import Scorer
 
 """
 This class inherits the CrawlThread interface and
@@ -14,15 +16,15 @@ defines and controls Google+ crawler search threads.
 
 class GooglePlusThread(CrawlThread):
 
-	def __init__(self, db, scorer, query, params=None):
-		# if not isinstance(db, dbFacade):
-		# 	raise TypeError('dbFacade instance required')
-		# elif not isinstance(scorer, Scorer):
-		# 	raise TypeError('Scorer instance required')
-		# elif not isinstance(query, str):
-		# 	raise TypeError('Query must be a string')
+	def __init__(self, db=None, scorer=None, query=None, params=None):
+		if not isinstance(db, dbFacade):
+			raise TypeError('dbFacade instance required')
+		elif not isinstance(scorer, Scorer):
+			raise TypeError('Scorer instance required')
+		elif not isinstance(query, str):
+			raise TypeError('Query must be a string')
 		# elif not isinstance(args, dict):
-		# 	raise TypeError('Args must be a dictionary')
+		#	raise TypeError('Args must be a dictionary')
 		# elif not 'location' in args.keys():
 		# 	raise KeyError('Location not defined in args')
 

@@ -7,7 +7,7 @@ sweet scoring action. Radical, dude!
 '''
 from nltk import word_tokenize
 from Attribute import Attribute
-#from Lemmatizer import Lemmatizer
+from Lemmatizer import Lemmatizer
 
 class SearchPacket:
 	'''
@@ -22,6 +22,7 @@ class SearchPacket:
 	'''
 	def __init__(self, attributes):
 		self.attributes = []
+		self.lemma = Lemmatizer()
 	
 		for attr in attributes:
 			try:
@@ -34,7 +35,7 @@ class SearchPacket:
 		if len(attributes) < 1:
 			raise ValueError("__init__: No valid attributes to search.")
 				
-		self.maxScore = sum([attr.get_attr_weight() for attr in self.attributes])
+		#self.maxScore = sum([attr.get_attr_weight_num() for attr in self.attributes])
 	
 	'''
 	Turns a rough attribute from the GUI into one that has exactly as many words
@@ -47,10 +48,11 @@ class SearchPacket:
 			raise ValueError("sanitizeAttribute: Invalid name for attribute.")
 		if attr.get_name() in [a.get_name() for a in self.attributes]:
 			raise ValueError("sanitizeAttribute: Duplicate name for an attribute.")
-		if attr.get_attr_weight() < 1 or attr.get_attr_weight() > 3:
+		if attr.get_attr_weight_num() < 1 or attr.get_attr_weight_num() > 3:
 			raise ValueError("sanitizeAttribute: Bad attribute weight.")
 			
 		dirtyWords = attr.get_words()
+		dirtyWords = self.lemma.lemmatizeTokens(dirtyWords)
 		dirtyWeights = attr.get_weights()
 		dirtySents = attr.get_sentiments()
 		
@@ -65,7 +67,7 @@ class SearchPacket:
 		if len(cleanWords) < 1:
 			raise ValueError("sanitizeAttribute: no valid words in attribute.")
 			
-		return Attribute(attr.get_name(), attr.get_attr_weight(),
+		return Attribute(attr.get_name(), attr.get_attr_weight_num(),
 			cleanWords, cleanWeights, cleanSents)
 	
 	'''

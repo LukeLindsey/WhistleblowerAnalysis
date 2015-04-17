@@ -1,6 +1,5 @@
 import unittest
-from SocialNetworkSearch.GooglePlus.GooglePlusSearch import GooglePlusSearch
-from SocialNetworkSearch.GooglePlus.GoogleAPIWrapper import GoogleAPIWrapper
+from EnronSearch.EnronThread import EnronThread
 from dbFacade import dbFacade
 from Scorer import Scorer
 from Attribute import Attribute
@@ -9,7 +8,7 @@ from SearchPacket import SearchPacket
 """__author__ = 'LukeLindsey' """
 
 
-class test_GooglePlusSearch(unittest.TestCase):
+class test_EnronThread(unittest.TestCase):
 
 	@classmethod
 	def setUpClass(self):
@@ -21,74 +20,74 @@ class test_GooglePlusSearch(unittest.TestCase):
 		attributes = [attribute]
 		search_packet = SearchPacket(attributes)
 		self.scorer = Scorer(search_packet)
+		self.args = {'folder_location': '/users/lukelindsey/Downloads/enron_mail_20110402/maildir'}
 
 		self.db = dbFacade()
 		# self.db.connect()
 		# self.db.create_keyspace_and_schema()
-		self.api_key = GoogleAPIWrapper.get_api_key()
 
 	def test_create_instance_with_valid_args(self):
-		GooglePlusSearch(api_key=self.api_key, db=self.db, scorer=self.scorer, query=self.query)
+		EnronThread(db=self.db, scorer=self.scorer, query=self.query, args=self.args)
 
-	def test_create_instance_missing_args(self):
+	def test_create_instance_missing_params(self):
 		try:
-			GooglePlusSearch()
-			self.fail()
-		except TypeError:
-			pass
-
-	def test_create_instance_missing_api_key(self):
-		try:
-			GooglePlusSearch(None, self.db, self.scorer, self.query)
+			EnronThread()
 			self.fail()
 		except TypeError:
 			pass
 
 	def test_create_instance_missing_db(self):
 		try:
-			GooglePlusSearch(self.api_key, None, self.scorer, self.query)
+			EnronThread(None, self.scorer, self.query, self.args)
 			self.fail()
 		except TypeError:
 			pass
 
 	def test_create_instance_missing_scorer(self):
 		try:
-			GooglePlusSearch(self.api_key, self.db, None, self.query)
+			EnronThread(self.db, None, self.query, self.args)
 			self.fail()
 		except TypeError:
 			pass
 
 	def test_create_instance_missing_query(self):
 		try:
-			GooglePlusSearch(self.api_key, self.db, self.scorer, None)
+			EnronThread(self.db, self.scorer, None, self.args)
 			self.fail()
 		except TypeError:
 			pass
 
-	def test_create_instance_invalid_api_key(self):
+	def test_create_instance_missing_args(self):
 		try:
-			GooglePlusSearch(4, self.db, self.scorer, self.query)
+			EnronThread(self.db, self.scorer, self.query, None)
 			self.fail()
 		except TypeError:
 			pass
 
 	def test_create_instance_invalid_db(self):
 		try:
-			GooglePlusSearch(self.api_key, "Invalid", self.scorer, self.query)
+			EnronThread("Invalid", self.scorer, self.query, self.args)
 			self.fail()
 		except TypeError:
 			pass
 
 	def test_create_instance_invalid_scorer(self):
 		try:
-			GooglePlusSearch(self.api_key, self.db, "Invalid", self.query)
+			EnronThread(self.db, "Invalid", self.query, self.args)
 			self.fail()
 		except TypeError:
 			pass
 
 	def test_create_instance_invalid_query(self):
 		try:
-			GooglePlusSearch(self.api_key, self.db, self.scorer, 4)
+			EnronThread(self.db, self.scorer, 4, self.args)
 			self.fail()
 		except TypeError:
+			pass
+
+	def test_create_instance_invalid_args(self):
+		try:
+			EnronThread(self.db, self.scorer, self.query, {})
+			self.fail()
+		except KeyError:
 			pass

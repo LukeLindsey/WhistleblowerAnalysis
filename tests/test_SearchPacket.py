@@ -9,7 +9,7 @@ import unittest
 from SearchPacket import SearchPacket
 from Attribute import Attribute
 
-class SearchPacketTests(unittest.TestCase):
+class test_SearchPacket(unittest.TestCase):
 	def setUp(self):    
 		self.attr1 = Attribute()
 		self.attr1.name = "one"
@@ -44,9 +44,9 @@ class SearchPacketTests(unittest.TestCase):
 		self.assertEquals(self.packet.sanitizeAttribute(test), correct)
 		
 	def test000_003_sanitize_oneBadSent(self):
-		test = Attribute("test", 1, ["one", "two"], [1,1], [1,2])
-		sanitize = self.packet.sanitizeAttribute(test)
-		self.assertEquals(self.packet.sanitizeAttribute(test), sanitize)
+		test = Attribute("test", 1, ["one", "two", "three"], [1,1, 1], [1, 0, 2])
+		correct = Attribute("test", 1, ["one", "two"], [1,1], [1,0])
+		self.assertEquals(self.packet.sanitizeAttribute(test), correct)
 		
 	def test000_004_sanitize_oneDupWord(self):
 		test = Attribute("test", 1, ["one", "one"], [1,1], [1,1])

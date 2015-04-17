@@ -90,7 +90,7 @@ class test_Attribute(unittest.TestCase):
 #set_sentiments
 	def test700_000_setsents(self):
 		self.test.set_sentiments(["Positive", "Neutral", "Negative"])
-		correct = Attribute("test", 1, ["tests"], [1], [1, -1, -1])
+		correct = Attribute("test", 1, ["tests"], [1], [1, 0, -1])
 		self.assertEquals(self.test, correct)
 		
 	def test700_001_setsents_blank(self):
@@ -132,7 +132,7 @@ class test_Attribute(unittest.TestCase):
 		self.assertEquals(self.test.get_name(), "test")
 		
 	def test900_008_getattrweight(self):
-		self.assertEquals(self.test.get_attr_weight(), 1)
+		self.assertEquals(self.test.get_attr_weight(), "Low")
 		
 	def test900_009_getwords(self):
 		self.assertEquals(self.test.get_words(), ["tests"])
@@ -157,6 +157,9 @@ class test_Attribute(unittest.TestCase):
 		
 	def test900_015_getmaxscore(self):
 		self.assertEquals(self.test.get_max_score(), 1)
+		
+	def test900_016_getattrweight(self):
+		self.assertEquals(self.test.get_attr_weight_num(), 1)
 		
 	#fail
 	def test900_900_getword_badindex(self):
