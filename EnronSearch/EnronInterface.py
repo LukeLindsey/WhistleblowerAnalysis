@@ -1,18 +1,21 @@
 from SearchInterface import SearchInterface
-from EnronThread import EnronThread
-from dbFacade import dbFacade
-from Scorer import Scorer
-import EnronSearch
+# from EnronThread import EnronThread
+# from dbFacade import dbFacade
+# from Scorer import Scorer
+# import EnronSearch
 import time
-import threading
 import multiprocessing
+from FindEmailProcess import FindEmailProcess
+from FindMatchesProcess import FindMatchesProcess
+from ScoreSentencesProcess import ScoreSentencesProcess
+from SendDatabaseProcess import SendDatabaseProcess
 
 
 class EnronInterface(SearchInterface):
 
-	'''
+	"""
 	Starts search crawling threads with inputed query string.
-	'''
+	"""
 	def search(self, query=None, args=None):
 		# type checking
 		if not isinstance(query, str):
@@ -20,28 +23,28 @@ class EnronInterface(SearchInterface):
 		elif not isinstance(args, dict):
 			raise TypeError('Args must be a dictionary')
 
-		formattedEmails = multiprocessing.Pipe()
-		matchedSentences = multiprocessing.Pipe()
-		scoredSentences = multiprocessing.Pipe()
+		formatted_emails = multiprocessing.Pipe()
+		matched_sentences = multiprocessing.Pipe()
+		scored_sentences = multiprocessing.Pipe()
 
 
-		self.findEmailProcess = FindEmailProcess(args['folder_location'], formattedEmails, self.db)
+		self.find_email_process = FindEmailProcess(args['folder_location'], formatted_emails, self.db)
 
-		self.findMatchesProcess = FindMatchesProcess(query, formattedEmails, matchedSentences)
+		self.find_matches_process = FindMatchesProcess(query, formatted_emails, matched_sentences)
 
-		self.scoreSentencesProcess = ScoreSentencesProcess(self.scorer, matchedSentences, scoredSentences)
+		self.score_sentences_process = ScoreSentencesProcess(self.scorer, matched_sentences, scored_sentences)
 
-		self.sendDatabaseProcess = SendDatabaseProcess(self.db, scoredSentences)
+		self.send_database_process = SendDatabaseProcess(self.db, scored_sentences)
 
-		self.findEmailProcess.start()
-		self.findMatchesProcess.start()
-		self.scoreSentencesProcess.start()
-		self.sendDatabaseProcess.start()
+		self.find_email_process.start()
+		self.find_matches_process.start()
+		self.score_sentences_process.start()
+		self.send_database_process.start()
 
-		self.findEmailProcess.join()
-		self.findMatchesProcess.join()
-		self.scoreSentencesProcess.join()
-		self.sendDatabaseProcess.join()
+		self.find_email_process.join()
+		self.find_matches_process.join()
+		self.score_sentences_process.join()
+		self.send_database_process.join()
 
 		time.sleep(5)
 
@@ -52,32 +55,17 @@ class EnronInterface(SearchInterface):
 	def stop_search(self):
 		print "Closing threads.."
 		try:		
-			self.findEmailProcess.raiseExc(KeyboardInterrupt)
-			self.findMatchesProcess.raiseExc(KeyboardInterrupt)
-			self.scoreSentencesProcess.raiseExc(KeyboardInterrupt)
-			self.sendDatabaseProcess.raiseExc(KeyboardInterrupt)
+			self.find_email_process.raiseExc(KeyboardInterrupt)
+			self.find_matches_process.raiseExc(KeyboardInterrupt)
+			self.score_sentences_process.raiseExc(KeyboardInterrupt)
+			self.send_database_process.raiseExc(KeyboardInterrupt)
 		except: #add a more specific one
 			pass
 
-		while self.findEmailProcess.isAlive() || self.findMatchesProcess.isAlive() || self.scoreSentencesProcess.isAlive() || self.sendDatabaseProcess.isAlive():
+		while self.find_email_process.is_alive() or self.find_matches_process.is_alive() or self.score_sentences_process.is_alive() or self.send_database_process.is_alive():
 			time.sleep(1)
-		self.findEmailProcess.join()
-		self.findMatchesProcess.join()
-		self.scoreSentencesProcess.join()
-		self.sendDatabaseProcess.join()
+		self.find_email_process.join()
+		self.find_matches_process.join()
+		self.score_sentences_process.join()
+		self.send_database_process.join()
 
-	@staticmethod
-	def print_statistics(enron_search):
-		total_time = enron_search.end_time - enron_search.start_time
-		total_seconds = total_time.seconds
-		hours = total_seconds // 3600
-		total_seconds = total_seconds % 3600
-		minutes = total_seconds // 60
-		seconds = total_seconds % 60
-
-		print "Searching Enron took: " + str(hours) + " hours, " + str(minutes) + \
-		      " minutes, and " + str(seconds) + " seconds."
-
-		print "Searched " + str(enron_search.total_users) + " users."
-		print "Searched " + str(enron_search.total_emails) + " emails."
-		print str(enron_search.total_sentences_matched) + " sentences were matches."

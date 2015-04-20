@@ -35,7 +35,7 @@ class FindMatchesProcess(multiprocessing.Process):
 				if word_to_search.lower() in sentence.lower():
 					FindMatchesProcess.clean_sentence(sentence)
 					# add to pipe
-					self.matched_sentences_pipe.put((sentence,user))
+					self.matched_sentences_pipe.put((sentence, word_to_search, user))
 					break
 
 	@staticmethod

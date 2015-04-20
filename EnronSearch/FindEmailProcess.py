@@ -28,8 +28,6 @@ class FindEmailProcess(multiprocessing.Process):
 					email_file.close()
 					email = ef.format_email(email)
 					self.formatted_emails_pipe.put((email, user_dir))
-					# self.total_emails += 1
 			print user_dir
 
 			self.db.add_user(user_dir, 0, 'Enron')
-			# self.total_users += 1
