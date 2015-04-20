@@ -1,24 +1,26 @@
 import multiprocessing
+from nltk.tokenize import sent_tokenize
+import re
 
 
 class FindMatchesProcess(multiprocessing.Process):
 
-	__init__(self, query, formatted_emails_pipe, matched_sentences_pipe):
+	def __init__(self, query, formatted_emails_pipe, matched_sentences_pipe):
+		multiprocessing.Process.__init__(self)
 		self.word_deck = query.split(" OR ")
 		self.formatted_emails_pipe = formatted_emails_pipe
 		self.matched_sentences_pipe = matched_sentences_pipe
-		self.db = db
 
 	def run(self):
 		self.find_matches()
 
 	def find_matches(self):
 		index = 0
-		(email, user) = formatted_emails_pipe.get()
+		(email, user) = self.formatted_emails_pipe.get()
 
 		for word in self.word_deck:
 			if word.lower() in email.lower():
-				find_sentences(index, email, user)
+				self.find_sentences(index, email, user)
 				break
 			index += 1
 
