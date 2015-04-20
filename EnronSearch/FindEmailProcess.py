@@ -31,3 +31,6 @@ class FindEmailProcess(multiprocessing.Process):
 			print user_dir
 
 			self.db.add_user(user_dir, 0, 'Enron')
+
+	def raise_exc(self, type):
+		raise type

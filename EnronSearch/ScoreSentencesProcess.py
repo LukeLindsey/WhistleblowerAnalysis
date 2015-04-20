@@ -17,3 +17,6 @@ class ScoreSentencesProcess(multiprocessing.Process):
 		score = float(self.scorer.score(sentence))
 		if score > 0:
 			self.scored_sentences_pipe.put((score, sentence.replace("'", "''"), user, word))
+
+	def raise_exc(self, type):
+		raise type

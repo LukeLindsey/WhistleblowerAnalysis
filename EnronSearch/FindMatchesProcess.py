@@ -44,3 +44,7 @@ class FindMatchesProcess(multiprocessing.Process):
 		sentence = sentence.replace('\n', ' ')
 		sentence = re.sub(space_pattern, ' ', sentence)
 		return sentence
+
+	def raise_exc(self, type):
+		raise type
+

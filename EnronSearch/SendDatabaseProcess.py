@@ -14,3 +14,6 @@ class SendDatabaseProcess(multiprocessing.Process):
 	def send_sentences(self):
 		(score, sentence, user, word) = self.scored_sentences_pipe.get()
 		self.db.add_post(user, 'Enron', sentence, word, score)
+
+	def raise_exc(self, type):
+		raise type

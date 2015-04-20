@@ -55,14 +55,15 @@ class EnronInterface(SearchInterface):
 	def stop_search(self):
 		print "Closing threads.."
 		try:		
-			self.find_email_process.raiseExc(KeyboardInterrupt)
-			self.find_matches_process.raiseExc(KeyboardInterrupt)
-			self.score_sentences_process.raiseExc(KeyboardInterrupt)
-			self.send_database_process.raiseExc(KeyboardInterrupt)
+			self.find_email_process.raise_exc(KeyboardInterrupt)
+			self.find_matches_process.raise_exc(KeyboardInterrupt)
+			self.score_sentences_process.raise_exc(KeyboardInterrupt)
+			self.send_database_process.raise_exc(KeyboardInterrupt)
 		except: #add a more specific one
 			pass
 
-		while self.find_email_process.is_alive() or self.find_matches_process.is_alive() or self.score_sentences_process.is_alive() or self.send_database_process.is_alive():
+		while self.find_email_process.is_alive() or self.find_matches_process.is_alive() or \
+				self.score_sentences_process.is_alive() or self.send_database_process.is_alive():
 			time.sleep(1)
 		self.find_email_process.join()
 		self.find_matches_process.join()
