@@ -41,8 +41,6 @@ class EnronInterface(SearchInterface):
 
 		self.send_users_thread = SendUsersThread(self.db, usernames)
 
-		time.sleep(15)
-
 		self.start()
 
 		self.join()
