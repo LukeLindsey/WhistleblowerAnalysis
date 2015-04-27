@@ -17,6 +17,7 @@ class FindMatchesProcess(multiprocessing.Process):
 	def find_matches(self):
 		index = 0
 		(email, user) = self.formatted_emails_queue.get()
+		print "Found to search: "
 
 		for word in self.word_deck:
 			if word.lower() in email.lower():

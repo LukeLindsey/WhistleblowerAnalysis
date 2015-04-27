@@ -1,4 +1,4 @@
-from WhistleblowerAnalysis.SearchInterface import SearchInterface
+from SearchInterface import SearchInterface
 # from EnronThread import EnronThread
 # from dbFacade import dbFacade
 # from Scorer import Scorer
@@ -40,6 +40,8 @@ class EnronInterface(SearchInterface):
 		self.send_database_thread = SendSentencesThread(self.db, scored_sentences)
 
 		self.send_users_thread = SendUsersThread(self.db, usernames)
+
+		time.sleep(15)
 
 		self.start()
 

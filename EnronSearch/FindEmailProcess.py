@@ -32,5 +32,4 @@ class FindEmailProcess(multiprocessing.Process):
 			print user_dir
 
 			self.usernames_queue.put(user_dir)
-			print "hello"
 			#self.db.add_user(user_dir, 0, 'Enron')
