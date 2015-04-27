@@ -31,7 +31,7 @@ class EnronInterface(SearchInterface):
 		usernames_put, usernames_get = multiprocessing.Pipe()
 
 
-		self.find_email_process = FindEmailProcess(args['folder_location'], formatted_emails_put, self.db, usernames_put)
+		self.find_email_process = FindEmailProcess(args['folder_location'], formatted_emails_put, usernames_put, self.db)
 
 		self.find_matches_process = FindMatchesProcess(query, formatted_emails_get, matched_sentences_put)
 
@@ -41,19 +41,27 @@ class EnronInterface(SearchInterface):
 
 		self.send_users_thread = SendUsersThread(self.db, usernames_get)
 
+		self.start()
+
+		self.join()
+
+		time.sleep(5)
+
+	'''Starts all the threads and processes'''
+	def start(self):
 		self.find_email_process.start()
 		self.find_matches_process.start()
 		self.score_sentences_process.start()
 		self.send_database_thread.start()
 		self.send_users_thread.start()
 
+	'''Joins all the threads and processes'''
+	def join(self):
 		self.find_email_process.join()
 		self.find_matches_process.join()
 		self.score_sentences_process.join()
 		self.send_database_thread.join()
 		self.send_users_thread.join()
-
-		time.sleep(5)
 
 	'''
 	Ends search crawling threads; 

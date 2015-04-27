@@ -16,7 +16,8 @@ class SendSentencesThread(threading.Thread):
 	def send_sentences(self):
 		try:
 			(score, sentence, user, word) = self.scored_sentences_pipe.recv()
-			self.db.add_post(user, 'Enron', sentence, word, score)
+			print score, sentence, user, word
+			#self.db.add_post(user, 'Enron', sentence, word, score)
 		except KeyboardInterrupt:
 			print('\n Enron: Terminated by user (send sentences)\n')
 
