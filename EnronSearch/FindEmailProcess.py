@@ -28,8 +28,11 @@ class FindEmailProcess(multiprocessing.Process):
 						email_file = open((sent_folder + "/" + email_file_name), 'r')
 						email = email_file.read()
 						email_file.close()
+						email = ef.format_email(email)
 						self.formatted_emails_queue.put([email, user_dir])
 			print user_dir
 
 			self.usernames_queue.put(user_dir)
+		print "DONE OPENING EMAILS"
+
 			#self.db.add_user(user_dir, 0, 'Enron')

@@ -1,6 +1,7 @@
 import threading
 import ctypes
 import inspect
+import Queue as QueueStandard
 
 
 class SendSentencesThread(threading.Thread):
@@ -11,12 +12,19 @@ class SendSentencesThread(threading.Thread):
 		self.scored_sentences_queue = scored_sentences_queue
 
 	def run(self):
-		self.send_sentences()
+		send = True
+		while send:
+			try:
+				self.send_sentences()
+			except QueueStandard.Empty:
+				send = False
+		print "DONE SENDING SENTENCES"
+
 
 	def send_sentences(self):
 		try:
-			(score, sentence, user, word) = self.scored_sentences_queue.get()
-			print sentence
+			(score, sentence, user, word) = self.scored_sentences_queue.get(True, 5)
+			#print sentence
 			#self.db.add_post(user, 'Enron', sentence, word, score)
 		except KeyboardInterrupt:
 			print('\n Enron: Terminated by user (send sentences)\n')

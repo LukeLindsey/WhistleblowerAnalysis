@@ -1,6 +1,7 @@
 import threading
 import ctypes
 import inspect
+import Queue as QueueStandard
 
 
 class SendUsersThread(threading.Thread):
@@ -11,12 +12,20 @@ class SendUsersThread(threading.Thread):
 		self.usernames_pipe = usernames_pipe
 
 	def run(self):
-		self.send_sentences()
+		send = True
+		while send:
+			try:
+				self.send_users()
+			except QueueStandard.Empty:
+				send = False
+		print "DONE SENDING USERS"
 
-	def send_sentences(self):
+
+	def send_users(self):
 		try:
 			username = self.usernames_pipe.get()
-			self.db.add_user(username, 0, 'Enron')
+			#print "sending user: " + username
+			#self.db.add_user(username, 0, 'Enron')
 		except KeyboardInterrupt:
 			print('\n Enron: Terminated by user (send sentences)\n')
 

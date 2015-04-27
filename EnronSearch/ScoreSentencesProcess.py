@@ -1,4 +1,5 @@
 import multiprocessing
+import Queue as QueueStandard
 
 
 class ScoreSentencesProcess(multiprocessing.Process):
@@ -10,11 +11,18 @@ class ScoreSentencesProcess(multiprocessing.Process):
 		self.scorer = scorer
 
 	def run(self):
-		self.score_sentences()
+		score = True
+		while score:
+			try:
+				self.score_sentences()
+			except QueueStandard.Empty:
+				score = False
+		print "DONE SCORING USERS"
+
 
 	def score_sentences(self):
-		(sentence, word, user) = self.matched_sentences_queue.get()
-		score = float(self.scorer.score(sentence))
+		(sentence, word, user) = self.matched_sentences_queue.get(True, 5)
+		score = self.scorer.score(sentence)
 		if score > 0:
 			self.scored_sentences_queue.put([score, sentence.replace("'", "''"), user, word])
 

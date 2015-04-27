@@ -1,6 +1,7 @@
 import multiprocessing
 from nltk.tokenize import sent_tokenize
 import re
+import Queue as QueueStandard
 
 
 class FindMatchesProcess(multiprocessing.Process):
@@ -12,12 +13,18 @@ class FindMatchesProcess(multiprocessing.Process):
 		self.matched_sentences_queue = matched_sentences_queue
 
 	def run(self):
-		self.find_matches()
+		search = True
+		while search:
+			try:
+				self.find_matches()
+			except QueueStandard.Empty:
+				search = False
+		print "DONE FINDING MATCHES"
+
 
 	def find_matches(self):
 		index = 0
-		(email, user) = self.formatted_emails_queue.get()
-		print "Found to search: "
+		(email, user) = self.formatted_emails_queue.get(True, 5)
 
 		for word in self.word_deck:
 			if word.lower() in email.lower():

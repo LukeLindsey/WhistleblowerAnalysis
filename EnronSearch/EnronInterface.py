@@ -11,6 +11,7 @@ from FindMatchesProcess import FindMatchesProcess
 from ScoreSentencesProcess import ScoreSentencesProcess
 from SendSentencesThread import SendSentencesThread
 from SendUsersThread import SendUsersThread
+from datetime import datetime
 
 
 class EnronInterface(SearchInterface):
@@ -25,10 +26,12 @@ class EnronInterface(SearchInterface):
 		elif not isinstance(args, dict):
 			raise TypeError('Args must be a dictionary')
 
-		formatted_emails= multiprocessing.Queue()
+		formatted_emails = multiprocessing.Queue()
 		matched_sentences = multiprocessing.Queue()
 		scored_sentences = multiprocessing.Queue()
 		usernames = multiprocessing.Queue()
+
+		start_time = datetime.now()
 
 
 		self.find_email_process = FindEmailProcess(args['folder_location'], formatted_emails, usernames, self.db)
@@ -44,6 +47,13 @@ class EnronInterface(SearchInterface):
 		self.start()
 
 		self.join()
+
+		print "DONE WITH ALL"
+
+		end_time = datetime.now()
+
+		total = end_time - start_time
+		print total
 
 		time.sleep(5)
 
