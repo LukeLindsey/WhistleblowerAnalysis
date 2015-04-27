@@ -8,6 +8,7 @@ sweet scoring action. Radical, dude!
 from nltk import word_tokenize
 from Attribute import Attribute
 from Lemmatizer import Lemmatizer
+from nltk.corpus import stopwords
 
 class SearchPacket:
 	'''
@@ -25,6 +26,7 @@ class SearchPacket:
 		self.lemma = Lemmatizer()
 	
 		for attr in attributes:
+			#If the attribute cannot be sanitized to an acceptable degree, skip it.
 			try:
 				sanitized = self.sanitizeAttribute(attr)
 			except ValueError, e:
@@ -34,9 +36,7 @@ class SearchPacket:
 				
 		if len(attributes) < 1:
 			raise ValueError("__init__: No valid attributes to search.")
-				
-		#self.maxScore = sum([attr.get_attr_weight_num() for attr in self.attributes])
-	
+					
 	'''
 	Turns a rough attribute from the GUI into one that has exactly as many words
 	as it needs.
@@ -52,7 +52,6 @@ class SearchPacket:
 			raise ValueError("sanitizeAttribute: Bad attribute weight.")
 			
 		dirtyWords = attr.get_words()
-		dirtyWords = self.lemma.lemmatizeTokens(dirtyWords)
 		dirtyWeights = attr.get_weights()
 		dirtySents = attr.get_sentiments()
 		
@@ -85,10 +84,15 @@ class SearchPacket:
 		cleanWords = []
 		cleanWeights = []
 		cleanSents = []
-		
+
+		'''Stop words: a list of the most commonly used words in the english language
+	  I remove them because keeping them will bloat the running time and the words
+		probably won't give us any of the information we want.'''
+		stop = stopwords.words("english")
 		for word, weight, sent in zip(dirtyWords, dirtyWeights, dirtySents):
 			word = word.lower()
-			if word in cleanWords or word == "":
+			word = self.lemma.stem([word])[0]#self.lemma.lemmatizeTokens([word])[0]
+			if word in cleanWords or word in stop or word == "":
 				continue
 			if weight < 1 or weight > 3:
 				continue
@@ -98,18 +102,16 @@ class SearchPacket:
 			cleanWords.append(word)
 			cleanWeights.append(weight)
 			cleanSents.append(sent)	
-			
+
 		return cleanWords, cleanWeights, cleanSents
 	
-	'''
-	Generator which provides each attribute, one at a time.
-	'''
 	def getAttributes(self):
-		for attr in self.attributes:
-			yield attr
+		return self.attributes
 			
 	'''
-	Get the query from all search terms inside.
+	Get the query from all search terms inside. Just "OR"s them all together.
+	Example: ["one", "two", "three"] and ["four, "five", "six"] will yield
+						"one OR two OR three OR four OR five OR six"
 	'''
 	def getQuery(self):
 		attributeQueries = []
