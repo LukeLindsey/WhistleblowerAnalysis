@@ -5,17 +5,17 @@ import inspect
 
 class SendSentencesThread(threading.Thread):
 
-	def __init__(self, db, scored_sentences_pipe):
+	def __init__(self, db, scored_sentences_queue):
 		threading.Thread.__init__(self)
 		self.db = db
-		self.scored_sentences_pipe = scored_sentences_pipe
+		self.scored_sentences_queue = scored_sentences_queue
 
 	def run(self):
 		self.send_sentences()
 
 	def send_sentences(self):
 		try:
-			(score, sentence, user, word) = self.scored_sentences_pipe.recv()
+			(score, sentence, user, word) = self.scored_sentences_queue.get()
 			print score, sentence, user, word
 			#self.db.add_post(user, 'Enron', sentence, word, score)
 		except KeyboardInterrupt:

@@ -5,18 +5,18 @@ import re
 
 class FindMatchesProcess(multiprocessing.Process):
 
-	def __init__(self, query, formatted_emails_pipe, matched_sentences_pipe):
+	def __init__(self, query, formatted_emails_queue, matched_sentences_queue):
 		multiprocessing.Process.__init__(self)
 		self.word_deck = query.split(" OR ")
-		self.formatted_emails_pipe = formatted_emails_pipe
-		self.matched_sentences_pipe = matched_sentences_pipe
+		self.formatted_emails_queue = formatted_emails_queue
+		self.matched_sentences_queue = matched_sentences_queue
 
 	def run(self):
 		self.find_matches()
 
 	def find_matches(self):
 		index = 0
-		(email, user) = self.formatted_emails_pipe.recv()
+		(email, user) = self.formatted_emails_queue.get()
 
 		for word in self.word_deck:
 			if word.lower() in email.lower():
@@ -35,7 +35,7 @@ class FindMatchesProcess(multiprocessing.Process):
 				if word_to_search.lower() in sentence.lower():
 					FindMatchesProcess.clean_sentence(sentence)
 					# add to pipe
-					self.matched_sentences_pipe.send([sentence, word_to_search, user])
+					self.matched_sentences_queue.put([sentence, word_to_search, user])
 					break
 
 	@staticmethod

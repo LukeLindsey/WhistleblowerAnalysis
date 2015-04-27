@@ -3,20 +3,20 @@ import multiprocessing
 
 class ScoreSentencesProcess(multiprocessing.Process):
 
-	def __init__(self, scorer, matched_sentences_pipe, scored_sentences_pipe):
+	def __init__(self, scorer, matched_sentences_queue, scored_sentences_queue):
 		multiprocessing.Process.__init__(self)
-		self.matched_sentences_pipe = matched_sentences_pipe
-		self.scored_sentences_pipe = scored_sentences_pipe
+		self.matched_sentences_queue = matched_sentences_queue
+		self.scored_sentences_queue = scored_sentences_queue
 		self.scorer = scorer
 
 	def run(self):
 		self.score_sentences()
 
 	def score_sentences(self):
-		(sentence, word, user) = self.matched_sentences_pipe.recv()
+		(sentence, word, user) = self.matched_sentences_queue.get()
 		score = float(self.scorer.score(sentence))
 		if score > 0:
-			self.scored_sentences_pipe.send([score, sentence.replace("'", "''"), user, word])
+			self.scored_sentences_queue.put([score, sentence.replace("'", "''"), user, word])
 
 	def raise_exc(self, type):
 		raise type

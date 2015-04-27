@@ -1,4 +1,4 @@
-from SearchInterface import SearchInterface
+from WhistleblowerAnalysis.SearchInterface import SearchInterface
 # from EnronThread import EnronThread
 # from dbFacade import dbFacade
 # from Scorer import Scorer
@@ -25,21 +25,21 @@ class EnronInterface(SearchInterface):
 		elif not isinstance(args, dict):
 			raise TypeError('Args must be a dictionary')
 
-		formatted_emails_put, formatted_emails_get = multiprocessing.Pipe()
-		matched_sentences_put, matched_sentences_get = multiprocessing.Pipe()
-		scored_sentences_put, scored_sentences_get = multiprocessing.Pipe()
-		usernames_put, usernames_get = multiprocessing.Pipe()
+		formatted_emails= multiprocessing.Queue()
+		matched_sentences = multiprocessing.Queue()
+		scored_sentences = multiprocessing.Queue()
+		usernames = multiprocessing.Queue()
 
 
-		self.find_email_process = FindEmailProcess(args['folder_location'], formatted_emails_put, usernames_put, self.db)
+		self.find_email_process = FindEmailProcess(args['folder_location'], formatted_emails, usernames, self.db)
 
-		self.find_matches_process = FindMatchesProcess(query, formatted_emails_get, matched_sentences_put)
+		self.find_matches_process = FindMatchesProcess(query, formatted_emails, matched_sentences)
 
-		self.score_sentences_process = ScoreSentencesProcess(self.scorer, matched_sentences_get, scored_sentences_put)
+		self.score_sentences_process = ScoreSentencesProcess(self.scorer, matched_sentences, scored_sentences)
 
-		self.send_database_thread = SendSentencesThread(self.db, scored_sentences_get)
+		self.send_database_thread = SendSentencesThread(self.db, scored_sentences)
 
-		self.send_users_thread = SendUsersThread(self.db, usernames_get)
+		self.send_users_thread = SendUsersThread(self.db, usernames)
 
 		self.start()
 

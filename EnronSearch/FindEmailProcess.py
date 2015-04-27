@@ -5,12 +5,12 @@ import os
 
 class FindEmailProcess(multiprocessing.Process):
 
-	def __init__(self, folder_location, formatted_emails_pipe, usernames_pipe, db):
+	def __init__(self, folder_location, formatted_emails_queue, usernames_queue, db):
 		multiprocessing.Process.__init__(self)
 		self.email_main_directory = folder_location + '/'
-		self.formatted_emails_pipe = formatted_emails_pipe
+		self.formatted_emails_queue = formatted_emails_queue
 		self.db = db
-		self.usernames_pipe = usernames_pipe
+		self.usernames_queue = usernames_queue
 
 	def run(self):
 		self.find_emails()
@@ -28,9 +28,9 @@ class FindEmailProcess(multiprocessing.Process):
 						email_file = open((sent_folder + "/" + email_file_name), 'r')
 						email = email_file.read()
 						email_file.close()
-						self.formatted_emails_pipe.send([email, user_dir])
+						self.formatted_emails_queue.put([email, user_dir])
 			print user_dir
 
-			self.usernames_pipe.send(user_dir)
+			self.usernames_queue.put(user_dir)
 			print "hello"
 			#self.db.add_user(user_dir, 0, 'Enron')
