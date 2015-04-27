@@ -16,7 +16,7 @@ class FindMatchesProcess(multiprocessing.Process):
 
 	def find_matches(self):
 		index = 0
-		(email, user) = self.formatted_emails_pipe.get()
+		(email, user) = self.formatted_emails_pipe.recv()
 
 		for word in self.word_deck:
 			if word.lower() in email.lower():
@@ -35,7 +35,7 @@ class FindMatchesProcess(multiprocessing.Process):
 				if word_to_search.lower() in sentence.lower():
 					FindMatchesProcess.clean_sentence(sentence)
 					# add to pipe
-					self.matched_sentences_pipe.put((sentence, word_to_search, user))
+					self.matched_sentences_pipe.send([sentence, word_to_search, user])
 					break
 
 	@staticmethod

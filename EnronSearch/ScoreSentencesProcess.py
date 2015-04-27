@@ -13,10 +13,10 @@ class ScoreSentencesProcess(multiprocessing.Process):
 		self.score_sentences()
 
 	def score_sentences(self):
-		(sentence, word, user) = self.matched_sentences_pipe.get()
+		(sentence, word, user) = self.matched_sentences_pipe.recv()
 		score = float(self.scorer.score(sentence))
 		if score > 0:
-			self.scored_sentences_pipe.put((score, sentence.replace("'", "''"), user, word))
+			self.scored_sentences_pipe.send([score, sentence.replace("'", "''"), user, word])
 
 	def raise_exc(self, type):
 		raise type

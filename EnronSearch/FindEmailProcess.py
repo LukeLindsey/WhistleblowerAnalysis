@@ -5,11 +5,12 @@ import os
 
 class FindEmailProcess(multiprocessing.Process):
 
-	def __init__(self, folder_location, formatted_emails_pipe, db):
+	def __init__(self, folder_location, formatted_emails_pipe, usernames_pipe, db):
 		multiprocessing.Process.__init__(self)
 		self.folder_location = folder_location + '/'
 		self.formatted_emails_pipe = formatted_emails_pipe
 		self.db = db
+		self.usernames_pipe = usernames_pipe
 
 	def run(self):
 		self.find_emails()
@@ -27,10 +28,11 @@ class FindEmailProcess(multiprocessing.Process):
 					email = email_file.read()
 					email_file.close()
 					email = ef.format_email(email)
-					self.formatted_emails_pipe.put((email, user_dir))
+					self.formatted_emails_pipe.send([email, user_dir])
 			print user_dir
 
-			self.db.add_user(user_dir, 0, 'Enron')
+			self.usernames_pipe.send(user_dir)
+			#self.db.add_user(user_dir, 0, 'Enron')
 
 	def raise_exc(self, type):
 		raise type
