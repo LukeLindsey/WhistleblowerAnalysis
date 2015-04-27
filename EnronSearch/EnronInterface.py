@@ -5,6 +5,7 @@ from SearchInterface import SearchInterface
 # import EnronSearch
 import time
 import multiprocessing
+import threading
 from FindEmailProcess import FindEmailProcess
 from FindMatchesProcess import FindMatchesProcess
 from ScoreSentencesProcess import ScoreSentencesProcess
@@ -36,7 +37,6 @@ class EnronInterface(SearchInterface):
 
 		self.score_sentences_process = ScoreSentencesProcess(self.scorer, matched_sentences_get, scored_sentences_put)
 
-		# change this to thread and add a name pipe
 		self.send_database_thread = SendSentencesThread(self.db, scored_sentences_get)
 
 		self.send_users_thread = SendUsersThread(self.db, usernames_get)
@@ -62,18 +62,21 @@ class EnronInterface(SearchInterface):
 	def stop_search(self):
 		print "Closing threads.."
 		try:		
-			self.find_email_process.raise_exc(KeyboardInterrupt)
-			self.find_matches_process.raise_exc(KeyboardInterrupt)
-			self.score_sentences_process.raise_exc(KeyboardInterrupt)
-			self.send_database_process.raise_exc(KeyboardInterrupt)
-		except: #add a more specific one
-			pass # add a fail here
+			self.find_email_process.terminate()
+			self.find_matches_process.terminate()
+			self.score_sentences_process.terminate()
+			self.send_database_thread.raiseExc(KeyboardInterrupt)
+			self.send_users_thread.raiseExc(KeyboardInterrupt)
+		except threading.ThreadError:
+			pass
 
 		while self.find_email_process.is_alive() or self.find_matches_process.is_alive() or \
-				self.score_sentences_process.is_alive() or self.send_database_process.is_alive():
+				self.score_sentences_process.is_alive() or self.send_database_thread.is_alive()\
+				or self.send_users_thread.is_alive():
 			time.sleep(1)
 		self.find_email_process.join()
 		self.find_matches_process.join()
 		self.score_sentences_process.join()
-		self.send_database_process.join()
+		self.send_database_thread.join()
+		self.send_users_thread.join()
 
