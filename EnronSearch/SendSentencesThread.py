@@ -25,7 +25,7 @@ class SendSentencesThread(threading.Thread):
 		try:
 			(score, sentence, user, word) = self.scored_sentences_queue.get(True, 5)
 			#print sentence
-			#self.db.add_post(user, 'Enron', sentence, word, score)
+			self.db.add_post(user, 'Enron', sentence, word, score)
 		except KeyboardInterrupt:
 			print('\n Enron: Terminated by user (send sentences)\n')
 

@@ -25,7 +25,7 @@ class SendUsersThread(threading.Thread):
 		try:
 			username = self.usernames_pipe.get()
 			#print "sending user: " + username
-			#self.db.add_user(username, 0, 'Enron')
+			self.db.add_user(username, 0, 'Enron')
 		except KeyboardInterrupt:
 			print('\n Enron: Terminated by user (send sentences)\n')
 

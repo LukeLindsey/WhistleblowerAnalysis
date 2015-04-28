@@ -40,7 +40,9 @@ class EnronInterface(SearchInterface):
 
 		self.score_sentences_process = ScoreSentencesProcess(self.scorer, matched_sentences, scored_sentences)
 
-		self.send_database_thread = SendSentencesThread(self.db, scored_sentences)
+		self.send_database_thread1 = SendSentencesThread(self.db, scored_sentences)
+		self.send_database_thread2 = SendSentencesThread(self.db, scored_sentences)
+
 
 		self.send_users_thread = SendUsersThread(self.db, usernames)
 
@@ -62,7 +64,8 @@ class EnronInterface(SearchInterface):
 		self.find_email_process.start()
 		self.find_matches_process.start()
 		self.score_sentences_process.start()
-		self.send_database_thread.start()
+		self.send_database_thread1.start()
+		self.send_database_thread2.start()
 		self.send_users_thread.start()
 
 	'''Joins all the threads and processes'''
@@ -70,7 +73,8 @@ class EnronInterface(SearchInterface):
 		self.find_email_process.join()
 		self.find_matches_process.join()
 		self.score_sentences_process.join()
-		self.send_database_thread.join()
+		self.send_database_thread1.join()
+		self.send_database_thread2.join()
 		self.send_users_thread.join()
 
 	'''
@@ -83,18 +87,19 @@ class EnronInterface(SearchInterface):
 			self.find_email_process.terminate()
 			self.find_matches_process.terminate()
 			self.score_sentences_process.terminate()
-			self.send_database_thread.raiseExc(KeyboardInterrupt)
+			self.send_database_thread1.raiseExc(KeyboardInterrupt)
+			self.send_database_thread2.raiseExc(KeyboardInterrupt)
 			self.send_users_thread.raiseExc(KeyboardInterrupt)
 		except threading.ThreadError:
 			pass
 
 		while self.find_email_process.is_alive() or self.find_matches_process.is_alive() or \
-				self.score_sentences_process.is_alive() or self.send_database_thread.is_alive()\
-				or self.send_users_thread.is_alive():
+				self.score_sentences_process.is_alive() or self.send_database_thread1.is_alive()\
+				or self.send_users_thread.is_alive() or self.send_database_thread2.is_alive():
 			time.sleep(1)
 		self.find_email_process.join()
 		self.find_matches_process.join()
 		self.score_sentences_process.join()
-		self.send_database_thread.join()
+		self.send_database_thread1.join()
 		self.send_users_thread.join()
 
